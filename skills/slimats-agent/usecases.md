@@ -160,14 +160,18 @@ Bài test phải **đang mở**. Trả về object `invite` có URL làm bài.
 **User nói:** «Upload CV cho profile #15» / «Gắn portfolio vào hồ sơ ứng viên»
 
 **Agent — upload CV chính:**
+
 ```http
-POST BASE?path=profiles/15/attachments
+POST /api/agent.php?path=profiles/15/attachments
+Authorization: Bearer KEY
 Content-Type: multipart/form-data
 
 file=@/path/to/cv.pdf
 kind=cv
 is_primary_cv=1
 ```
+
+Hoặc dùng curl (không set `Content-Type` thủ công — curl tự thêm boundary):
 
 **Field hỗ trợ:** `file` (hoặc `cv_file`, `attachment`).
 

@@ -38,9 +38,50 @@ GET profiles/{id}
 PATCH profiles/{id}
 POST profiles/{id}/email
 POST profiles/{id}/test-invite
-POST profiles/{id}/attachments
+POST profiles/{id}/attachments          (multipart/form-data)
 GET profiles/{id}/attachments/{attachment_id}
 ```
+
+#### Upload file đính kèm
+
+```http
+POST /api/agent.php?path=profiles/{id}/attachments
+Authorization: Bearer <agent_api_key>
+Content-Type: multipart/form-data
+```
+
+| Field | Bắt buộc | Mô tả |
+|-------|----------|--------|
+| `file` | Có* | File upload (field thay thế: `cv_file`, `attachment`) |
+| `kind` | Không | `cv`, `portfolio`, `image`, `test`, `document`, `other` — tự suy từ đuôi file nếu bỏ trống |
+| `is_primary_cv` | Không | `1`/`0`/`true`/`false` — mặc định `true` khi `kind=cv`; cập nhật `profile.cv_link` nếu là CV chính |
+
+**Định dạng file:** PDF, DOC, DOCX, PNG, JPG, JPEG, WEBP  
+**Giới hạn:** mặc định 10MB/file — setting `profile_upload_max_mb`
+
+**Response `201`:**
+
+```json
+{
+  "ok": true,
+  "attachment": {
+    "id": 12,
+    "profile_id": 15,
+    "filename": "cv.pdf",
+    "mime_type": "application/pdf",
+    "file_size": 245760,
+    "kind": "cv",
+    "admin_url": "https://.../admin.php?page=attachment&id=12",
+    "download_url": "https://.../api/agent.php?path=profiles/15/attachments/12",
+    "created_at": "2026-07-17 10:00:00"
+  },
+  "cv_link_updated": true,
+  "profile": { "id": 15, "cv_link": "...", "...": "..." },
+  "attachments": [ "..."]
+}
+```
+
+**Lỗi thường gặp:** `404` hồ sơ không tồn tại · `422` thiếu file / sai định dạng / vượt dung lượng
 
 ### Bài test
 

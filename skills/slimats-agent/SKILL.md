@@ -46,7 +46,10 @@ POST /api/agent.php?path=profiles/search
 GET /api/agent.php?path=interviews
 GET /api/agent.php?path=jobs
 PATCH /api/agent.php?path=settings
+POST /api/agent.php?path=profiles/{id}/attachments
 ```
+
+Upload file: `POST profiles/{id}/attachments` với `Content-Type: multipart/form-data` (field `file`, tuỳ chọn `kind`, `is_primary_cv`). Chi tiết: [reference.md](reference.md#upload-file-đính-kèm).
 
 ## Quy trình trả lời
 
