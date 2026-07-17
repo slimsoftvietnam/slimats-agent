@@ -67,6 +67,7 @@ Chi tiết endpoint: [`reference.md`](skills/slimats-agent/reference.md) · use 
 ## Use case phổ biến
 
 - Thêm / lọc / cập nhật ứng viên (`profiles`, `profiles/search`, `profiles/bulk`)
+- Upload CV, portfolio, ảnh, file bài test (`POST profiles/{id}/attachments`)
 - Gửi email HR, link bài test (`profiles/{id}/email`, `test-invite`)
 - Lên lịch phỏng vấn (`interviews`)
 - Quản lý tin tuyển dụng, bài test, câu hỏi (`jobs`, `tests`)

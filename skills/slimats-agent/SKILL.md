@@ -1,6 +1,6 @@
 ---
 name: slimats-agent
-description: Connect to and operate SlimATS via its Agent REST API without MCP. Use when the user mentions SlimATS, ATS API, agent_api, api/agent.php, Bearer key, recruitment workflows, add candidates, schedule interviews, send HR emails, test invites, profiles, tests, interviews, jobs, or wants use-case examples for controlling the ATS through prompt-driven HTTP calls.
+description: Connect to and operate SlimATS via its Agent REST API without MCP. Use when the user mentions SlimATS, ATS API, agent_api, api/agent.php, Bearer key, recruitment workflows, add candidates, upload CV attachments, schedule interviews, send HR emails, test invites, profiles, tests, interviews, jobs, or wants use-case examples for controlling the ATS through prompt-driven HTTP calls.
 disable-model-invocation: true
 ---
 
@@ -76,6 +76,7 @@ PATCH /api/agent.php?path=settings
 - `profiles`, `profiles/search`, `profiles/{id}`
 - `profiles/{id}/email`
 - `profiles/{id}/test-invite`
+- `profiles/{id}/attachments` (POST upload, GET `.../attachments/{id}` download)
 - `submissions`, `submissions/{id}`
 - `interviews`, `interviews/{id}`
 - `operations/imap-scan`
@@ -98,6 +99,7 @@ PATCH /api/agent.php?path=settings
 |------------|-----------------|-----------|
 | Kiểm tra kết nối | «Test API SlimATS» | `GET health`, `GET meta` |
 | Thêm ứng viên | «Thêm 3 UV vào job #2» | `POST profiles/bulk` |
+| Upload CV / file | «Upload CV cho profile #15» | `POST profiles/{id}/attachments` |
 | Lọc tiềm năng | «Top 10 UV shortlisted job Marketing» | `POST profiles/search` |
 | Đổi trạng thái | «Profile 15 → shortlisted» | `PATCH profiles/{id}` |
 | Gửi email | «Gửi email mời PV cho #15» | `POST profiles/{id}/email` |
@@ -126,7 +128,7 @@ Bearer YOUR_API_KEY
 
 Nguyên tắc:
 - Khi cần dữ liệu thật, hãy gọi API thay vì suy đoán.
-- Ưu tiên dùng các path health, meta, profiles, profiles/search, tests, tests/{id}?expand=1, interviews, jobs, settings.
+- Ưu tiên dùng các path health, meta, profiles, profiles/search, profiles/{id}/attachments, tests, tests/{id}?expand=1, interviews, jobs, settings.
 - Khi cập nhật dữ liệu, dùng đúng method POST/PATCH/DELETE.
 - Tóm tắt kết quả ngắn gọn bằng tiếng Việt.
 ```

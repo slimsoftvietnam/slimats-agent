@@ -38,6 +38,8 @@ GET profiles/{id}
 PATCH profiles/{id}
 POST profiles/{id}/email
 POST profiles/{id}/test-invite
+POST profiles/{id}/attachments
+GET profiles/{id}/attachments/{attachment_id}
 ```
 
 ### Bài test
@@ -144,6 +146,29 @@ curl -X POST \
   "https://your-domain.com/path/api/agent.php?path=profiles/15/email"
 ```
 
+### Upload file đính kèm ứng viên
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "file=@/path/to/cv.pdf" \
+  -F "kind=cv" \
+  -F "is_primary_cv=1" \
+  "https://your-domain.com/path/api/agent.php?path=profiles/15/attachments"
+```
+
+Field `file` (hoặc `cv_file`, `attachment`). `kind`: `cv`, `portfolio`, `image`, `test`, `document`, `other`. Khi `is_primary_cv=1` và `kind=cv`, API cập nhật `profile.cv_link`.
+
+Định dạng: PDF, DOC, DOCX, PNG, JPG, JPEG, WEBP. Giới hạn mặc định 10MB/file (`settings.profile_upload_max_mb`).
+
+### Tải file đính kèm
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+  -o cv.pdf \
+  "https://your-domain.com/path/api/agent.php?path=profiles/15/attachments/12"
+```
+
 ## Prompt ngắn cho agent ngoài
 
 ```text
@@ -152,6 +177,6 @@ Base URL: https://your-domain.com/path/api/agent.php
 Authorization: Bearer YOUR_API_KEY
 
 Khi cần dữ liệu thật, hãy gọi API thay vì suy đoán.
-Ưu tiên: health, meta, profiles, profiles/search, tests, tests/{id}?expand=1, interviews, jobs, settings.
+Ưu tiên: health, meta, profiles, profiles/search, profiles/{id}/attachments, tests, tests/{id}?expand=1, interviews, jobs, settings.
 Prompt user đầy đủ: examples.md
 ```

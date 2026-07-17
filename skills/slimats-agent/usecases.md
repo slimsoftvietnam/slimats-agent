@@ -20,6 +20,8 @@ Prompt copy-paste: [examples.md](examples.md) · Endpoint chi tiết: [reference
 | Đổi trạng thái ứng viên | `PATCH profiles/{id}` | body: status, hr_note |
 | Gửi email mời PV / từ chối | `POST profiles/{id}/email` | body: `template` hoặc `template_type`, `scheduled_at`… |
 | Tạo link bài test | `POST profiles/{id}/test-invite` | body: test_id (tuỳ chọn) |
+| Upload CV / file đính kèm | `POST profiles/{id}/attachments` | multipart: file, kind, is_primary_cv |
+| Tải file đính kèm | `GET profiles/{id}/attachments/{attachment_id}` | Bearer auth |
 | Xem bài nộp test | `GET submissions` hoặc `GET submissions/{id}` | filter test_id, status |
 | Lên lịch phỏng vấn | `POST interviews` | profile_id, scheduled_at… |
 | Gửi email mời PV theo lịch | `POST interviews/{id}/send-email` | — |
@@ -150,6 +152,42 @@ Content-Type: application/json
 ```
 
 Bài test phải **đang mở**. Trả về object `invite` có URL làm bài.
+
+---
+
+## UC-14: Upload file đính kèm ứng viên
+
+**User nói:** «Upload CV cho profile #15» / «Gắn portfolio vào hồ sơ ứng viên»
+
+**Agent — upload CV chính:**
+```http
+POST BASE?path=profiles/15/attachments
+Content-Type: multipart/form-data
+
+file=@/path/to/cv.pdf
+kind=cv
+is_primary_cv=1
+```
+
+**Field hỗ trợ:** `file` (hoặc `cv_file`, `attachment`).
+
+**`kind`:** `cv`, `portfolio`, `image`, `test`, `document`, `other` (tự suy từ đuôi file nếu bỏ trống).
+
+**Định dạng:** PDF, DOC, DOCX, PNG, JPG, JPEG, WEBP.
+
+**Giới hạn:** mặc định 10MB/file — cấu hình qua `settings.profile_upload_max_mb` (`PATCH settings`).
+
+**Khi `is_primary_cv=1` và `kind=cv`:** API cập nhật `profile.cv_link` trỏ tới file trong admin.
+
+**Response gồm:** `attachment`, `attachments` (toàn bộ), `cv_link_updated`, `profile`.
+
+**Tải file:**
+```http
+GET BASE?path=profiles/15/attachments/12
+Authorization: Bearer KEY
+```
+
+**Xem danh sách file:** `GET BASE?path=profiles/15` — field `attachments` kèm `admin_url`, `download_url`, `kind`, `mime_type`, `file_size`.
 
 ---
 
@@ -295,5 +333,6 @@ Xem đầy đủ theo từng tình huống trong [examples.md](examples.md).
 | 401 Unauthorized | Sai/thiếu Bearer key | Kiểm tra Cài đặt → API Agent |
 | 404 Endpoint | Sai `path` | Gọi `meta`, đối chiếu bảng trên |
 | test-invite lỗi | Bài test chưa mở | Mở bài test trong admin |
+| upload attachments lỗi | Sai định dạng / vượt dung lượng | PDF,DOC,DOCX,PNG,JPG,JPEG,WEBP; max `profile_upload_max_mb` MB |
 | email lỗi | Chưa cấu hình SMTP | Cài đặt → Email |
 | imap-scan lỗi | Chưa bật IMAP / extension | Cấu hình + PHP imap |

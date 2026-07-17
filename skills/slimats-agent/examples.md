@@ -63,9 +63,18 @@ Lọc 10 ứng viên tiềm năng nhất cho job #2 (sort=priority, statuses: re
 Xem chi tiết hồ sơ profile #15 (kèm lịch PV và file đính kèm nếu có).
 ```
 
+```text
+Upload CV chính cho profile #15 từ file local /path/to/cv.pdf.
+Dùng kind=cv, is_primary_cv=1 qua API attachments.
+```
+
+```text
+Upload portfolio PDF và ảnh profile cho ứng viên #15 (kind=portfolio và kind=image).
+```
+
 ---
 
-## Prompt user — Email & bài test (UC-05, UC-06)
+## Prompt user — Upload file đính kèm (UC-14)
 
 ```text
 Gửi email mời phỏng vấn cho profile #15:
